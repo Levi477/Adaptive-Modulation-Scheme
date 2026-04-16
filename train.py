@@ -66,17 +66,24 @@ for epoch in range(200):
     loss.backward()
     optimizer.step()
 
-# 4. Export the Model to ONNX for MATLAB
-dummy_input = torch.randn(1, 5)  # 1 sample, 5 features
-torch.onnx.export(
-    model,
-    dummy_input,
-    "adaptive_mod_model.onnx",
-    input_names=["features"],
-    output_names=["prediction"],
-)
+# 4. Export the Model Weights to MATLAB format
+with open("matlab_weights.txt", "w") as f:
+    f.write("%% --- NEURAL NETWORK WEIGHTS ---\n")
+    for name, param in model.named_parameters():
+        var_name = name.replace(".", "_")
+        val = param.detach().numpy()
+        if val.ndim == 2:
+            # Matrix (Weights)
+            rows = ["  " + " ".join([f"{x:.8f}" for x in row]) for row in val]
+            matrix_str = "; ...\n".join(rows)
+            f.write(f"{var_name} = [ ...\n{matrix_str} ...\n];\n\n")
+        else:
+            # Vector (Biases)
+            vec_str = " ".join([f"{x:.8f}" for x in val])
+            f.write(f"{var_name} = [{vec_str}]';\n\n")
 
-print("Model trained and exported as 'adaptive_mod_model.onnx'")
-# NOTE: Save the scaler mean and variance manually to use in MATLAB
+print(
+    "Model trained! Open 'matlab_weights.txt' and copy its contents into your MATLAB script."
+)
 print("Scaler Means:", scaler.mean_)
 print("Scaler Variances:", scaler.var_)
