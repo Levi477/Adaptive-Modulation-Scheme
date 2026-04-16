@@ -57,7 +57,6 @@ fc3_bias = [0.01661413 0.14863010 0.16237272 0.20345306 0.11389960 -0.05859800]'
 
 % =========================================================================
 
-% Enter your current lab hardware measurements here:
 % [Tx_Power_dBm, Target_SNR_dB, Mean_Channel_Gain, Noise_Power_Watts, Phase_Noise_Var]
 current_lab_features = [0, 15.0, 0.5, 0.001, 0.01];
 
